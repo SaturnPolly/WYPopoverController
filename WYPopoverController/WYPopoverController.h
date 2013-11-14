@@ -84,6 +84,8 @@ typedef NS_OPTIONS(NSUInteger, WYPopoverAnimationOptions) {
 
 @property (nonatomic, strong) UIColor *overlayColor             UI_APPEARANCE_SELECTOR;
 
+@property (nonatomic, strong) UIImage *fillBackgroundImage;
+
 @end
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

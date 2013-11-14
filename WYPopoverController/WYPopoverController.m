@@ -1126,11 +1126,14 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
             CGContextBeginTransparencyLayer(context, NULL);
             [outerRectPath addClip];
             CGRect outerRectBounds = CGPathGetPathBoundingBox(outerRectPath.CGPath);
-            CGContextDrawLinearGradient(context, fillGradient,
-                                        CGPointMake(CGRectGetMidX(outerRectBounds), CGRectGetMinY(outerRectBounds)),
-                                        CGPointMake(CGRectGetMidX(outerRectBounds), CGRectGetMaxY(outerRectBounds)),
-                                        0);
-            CGContextEndTransparencyLayer(context);
+            if (self.fillBackgroundImage) {
+                [self.fillBackgroundImage drawInRect:(CGRect){CGPointZero, self.fillBackgroundImage.size}];
+            } else {
+                CGContextDrawLinearGradient(context, fillGradient,
+                                            CGPointMake(CGRectGetMidX(outerRectBounds), CGRectGetMinY(outerRectBounds)),
+                                            CGPointMake(CGRectGetMidX(outerRectBounds), CGRectGetMaxY(outerRectBounds)),
+                                            0);
+            }            CGContextEndTransparencyLayer(context);
         }
         CGContextRestoreGState(context);
         
