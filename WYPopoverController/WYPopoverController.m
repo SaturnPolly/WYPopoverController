@@ -452,6 +452,7 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
 @property(nonatomic, assign) id <WYPopoverOverlayViewDelegate> delegate;
 @property(nonatomic, assign) BOOL testHits;
 @property(nonatomic, unsafe_unretained) NSArray *passthroughViews;
+@property(nonatomic, assign) CGRect cutOutRect;
 
 @end
 
@@ -522,6 +523,19 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
 	}
 	
 	return [self isPassthroughView:view.superview];
+}
+
+- (void)drawRect:(CGRect)rect 
+{
+    CGContextRef context = UIGraphicsGetCurrentContext();
+	UIGraphicsPushContext(context);
+    [self.backgroundColor setFill];
+    CGContextClearRect(context, self.bounds);
+    CGContextFillRect(context, self.bounds);
+    if (!CGRectEqualToRect(CGRectZero, self.cutOutRect)) {
+        CGContextClearRect(context, self.cutOutRect);
+    }
+    UIGraphicsPopContext();
 }
 
 @end
@@ -1386,6 +1400,7 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
         viewController = aViewController;
         popoverLayoutMargins = UIEdgeInsetsMake(10, 10, 10, 10);
         keyboardRect = CGRectZero;
+        _overlayCutOutRect = CGRectZero;
     }
     
     return self;
@@ -1598,6 +1613,7 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
     } else {
         overlayView.backgroundColor = containerView.overlayColor;
     }
+    overlayView.cutOutRect = self.overlayCutOutRect;
     
     [self positionPopover];
     
@@ -1769,6 +1785,10 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
     overlayView.frame = self.rootView.bounds;
     
     viewFrame = [overlayView convertRect:rect fromView:inView];
+    
+    if (!CGRectEqualToRect(overlayView.cutOutRect, CGRectZero)) {
+        overlayView.cutOutRect = [overlayView convertRect:overlayView.cutOutRect fromView:inView];
+    }
     
     minX = popoverLayoutMargins.left;
     maxX = self.rootView.bounds.size.width - popoverLayoutMargins.right;

@@ -100,6 +100,7 @@ typedef NS_OPTIONS(NSUInteger, WYPopoverAnimationOptions) {
 @property (nonatomic, assign, readonly) BOOL isPopoverVisible;
 @property (nonatomic, strong, readonly) UIViewController* contentViewController;
 @property (nonatomic, assign) CGSize popoverContentSize;
+@property (nonatomic, assign) CGRect overlayCutOutRect;
 
 - (id)initWithContentViewController:(UIViewController *)viewController;
 
